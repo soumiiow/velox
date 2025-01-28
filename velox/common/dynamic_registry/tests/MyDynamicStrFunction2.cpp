@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 #include "velox/common/dynamic_registry/DynamicFunctionRegistrar.h"
-#include "velox/type/SimpleFunctionApi.h"
-
 // This file defines a mock function that will be dynamically linked and
 // registered. There are no restrictions as to how the function needs to be
 // defined, but the library (.so) needs to provide a `void registry()` C
@@ -29,20 +27,19 @@ namespace facebook::velox::common::dynamicRegistry {
 template <typename T>
 struct Dynamic123Function {
   VELOX_DEFINE_FUNCTION_TYPES(T);
-  FOLLY_ALWAYS_INLINE bool call(
-      int64_t& result,
-      const arg_type<Array<int64_t>>& array) {
-    result = array.size();
+  FOLLY_ALWAYS_INLINE bool call(out_type<Varchar>& result, const arg_type<Varchar>& in) {
+    result = in;
     return true;
   }
 };
+
 } // namespace facebook::velox::common::dynamicRegistry
 
 extern "C" {
+
 void registry() {
   facebook::velox::registerFunctionWrapper<
       facebook::velox::common::dynamicRegistry::Dynamic123Function,
-      int64_t,
-      facebook::velox::Array<int64_t>>({"dynamic_4"});
+      facebook::velox::Varchar, facebook::velox::Varchar>({"dynamic_5"});
 }
 }

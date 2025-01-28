@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "velox/functions/Udf.h"
+#include "velox/common/dynamic_registry/DynamicFunctionRegistrar.h"
 
 // This file defines a mock function that will be dynamically linked and
 // registered. There are no restrictions as to how the function needs to be
@@ -38,7 +38,7 @@ struct Dynamic123Function {
 extern "C" {
 
 void registry() {
-  facebook::velox::registerFunction<
+  facebook::velox::registerFunctionWrapper<
       facebook::velox::common::dynamicRegistry::Dynamic123Function,
       int64_t>({"dynamic_3"});
 }

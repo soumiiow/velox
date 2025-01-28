@@ -27,7 +27,7 @@ namespace facebook::velox::functions::test {
 
 class DynamicLinkTest : public FunctionBaseTest {};
 
-std::string getLibraryPath(std::string filename) {
+std::string getLibraryPath(const std::string& filename) {
   return fmt::format(
       "{}/{}{}",
       VELOX_TEST_DYNAMIC_LIBRARY_PATH,
@@ -153,7 +153,49 @@ TEST_F(DynamicLinkTest, dynamicLoadErrFunc) {
           {0, 1, 3, 4, 5, 6, 7, 8, 9}})});
 
   // Expecting a success because we are passing in an array.
-  EXPECT_EQ(123, dynamicFunction(check));
+  EXPECT_EQ(9, dynamicFunction(check));
+}
+
+TEST_F(DynamicLinkTest, dynamicLoadTwoOfDiffNames) {
+
+  const auto dynamicFunctionInt = [&](const std::optional<int64_t> a) {
+    return evaluateOnce<int64_t>("dynamic_5()", a);
+  };
+  const auto dynamicFunctionStr = [&](const std::optional<std::string> a) {
+    return evaluateOnce<std::string>("dynamic_5()", a);
+  };
+
+  auto& registry = exec::simpleFunctions();
+  auto signaturesBefore = getFunctionSignatures().size();
+
+  VELOX_ASSERT_THROW(
+      dynamicFunctionStr("1"), "Scalar function doesn't exist: dynamic_5.");
+
+  std::string libraryPath = getLibraryPath("libvelox_str_function_my_dynamic_2");
+  loadDynamicLibrary(libraryPath.data());
+  auto signaturesAfterFirst = getFunctionSignatures().size();
+  EXPECT_EQ(signaturesAfterFirst, signaturesBefore + 1);
+  EXPECT_EQ("1", dynamicFunctionStr("1"));
+  auto resolved = registry.resolveFunction("dynamic_5", {});
+  EXPECT_EQ(TypeKind::VARCHAR, resolved->type()->kind());
+
+  VELOX_ASSERT_THROW(
+      dynamicFunctionInt(0),
+      "Scalar function doesn't exist: dynamic_5.");
+
+  std::string libraryPathInt =
+      getLibraryPath("libvelox_int_function_my_dynamic_2");
+  loadDynamicLibrary(libraryPathInt.data());
+
+  // The first function loaded should NOT be rewritten.
+  VELOX_ASSERT_THROW(
+      dynamicFunctionStr("0"),
+      "Expression evaluation result is not of expected type: dynamic_5() -> CONSTANT vector of type BIGINT");
+  EXPECT_EQ(0, dynamicFunctionInt(0));
+  auto signaturesAfterSecond = getFunctionSignatures().size();
+  EXPECT_EQ(signaturesAfterSecond, signaturesAfterFirst);
+  auto resolvedAfterSecond = registry.resolveFunction("dynamic_6", {});
+  EXPECT_EQ(TypeKind::BIGINT, resolvedAfterSecond->type()->kind());
 }
 
 } // namespace facebook::velox::functions::test

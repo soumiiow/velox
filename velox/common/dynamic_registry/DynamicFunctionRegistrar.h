@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#pragma once
+
+#include "velox/functions/Macros.h"
 #include "velox/functions/Registerer.h"
 
 namespace facebook::velox{
-template <template <class> class T, typename TReturn>
-void registerFunctionWrapper(const char *name, const char *nameSpace = "") {
+template <template <class> class T, typename TReturn, typename... TArgs>
+void registerFunctionWrapper(const char *name, const char *nameSpace = "", bool overwrite = true) { //TODO add constraints
     std::string cpp_name(nameSpace);
     cpp_name.append(name);
-    facebook::velox::registerFunction<T, int64_t>({cpp_name});
+    facebook::velox::registerFunction<T, TReturn, TArgs ...>({cpp_name}, {}, overwrite);
 }
 }
