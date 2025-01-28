@@ -51,7 +51,7 @@ if(APPLE)
                       "-Wl,-undefined,dynamic_lookup")
 
 else()
-  target_link_libraries(velox_function_my_dynamic xsimd fmt velox_dynamic_function_registry)
+  target_link_libraries(velox_function_my_dynamic xsimd fmt)
 
   target_link_libraries(velox_int_function_my_dynamic xsimd fmt)
 
@@ -82,7 +82,6 @@ target_link_libraries(
   velox_functions_test_lib
   velox_dynamic_function_loader
   velox_function_registry
-  velox_dynamic_function_registry
   xsimd
   GTest::gmock
   GTest::gtest
