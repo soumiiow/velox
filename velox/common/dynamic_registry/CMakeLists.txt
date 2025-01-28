@@ -16,6 +16,9 @@ velox_add_library(velox_dynamic_function_loader DynamicLibraryLoader.cpp)
 
 velox_link_libraries(velox_dynamic_function_loader PRIVATE velox_exception)
 
+velox_add_library(velox_dynamic_function_registry DynamicFunctionRegistrar.cpp)
+velox_link_libraries(velox_dynamic_function_registry xsimd fmt)
+
 if(${VELOX_BUILD_TESTING})
   add_subdirectory(tests)
 endif()
