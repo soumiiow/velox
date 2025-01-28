@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace facebook::velox::common{
+namespace facebook::velox{
 template <template <class> class T, typename TReturn>
 void registerFunctionWrapper(const char *name, const char *nameSpace = "");
 }

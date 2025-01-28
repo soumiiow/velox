@@ -46,7 +46,7 @@ extern "C" {
 // }
 
    void registry() {
-    facebook::velox::common::registerFunctionWrapper<
+    facebook::velox::registerFunctionWrapper<
       facebook::velox::common::dynamicRegistry::Dynamic123Function,
       int64_t>("dynamic_1");
 }

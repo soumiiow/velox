@@ -15,7 +15,7 @@
  */
 #include "velox/common/dynamic_registry/DynamicFunctionRegistrar.h"
 #include "velox/functions/Udf.h"
-namespace facebook::velox::common{
+namespace facebook::velox{
 template <template <class> class T, typename TReturn>
 void registerFunctionWrapper(const char *name, const char *nameSpace) {
   std::string cpp_name(nameSpace);
