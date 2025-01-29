@@ -39,7 +39,7 @@ struct Dynamic123Function {
 extern "C" {
 
 void registry() {
-  facebook::velox::registerFunctionWrapper<
+  facebook::velox::common::registerFunctionWrapper<
       facebook::velox::common::dynamicRegistry::Dynamic123Function,
       int64_t, int64_t>({"dynamic_5"});
 }

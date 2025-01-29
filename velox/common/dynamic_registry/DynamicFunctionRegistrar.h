@@ -18,9 +18,9 @@
 #include "velox/functions/Macros.h"
 #include "velox/functions/Registerer.h"
 
-namespace facebook::velox{
+namespace facebook::velox::common {
 template <template <class> class T, typename TReturn, typename... TArgs>
-void registerFunctionWrapper(const char *name, const char *nameSpace = "", bool overwrite = true) { //TODO add constraints
+void registerFunctionWrapper(const char *name, const char *nameSpace = "", const std::vector<exec::SignatureVariable>& constraints = {}, bool overwrite = true) {
     std::string cpp_name(nameSpace);
     cpp_name.append(name);
     facebook::velox::registerFunction<T, TReturn, TArgs ...>({cpp_name}, {}, overwrite);

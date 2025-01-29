@@ -38,7 +38,7 @@ struct Dynamic123Function {
 extern "C" {
 
 void registry() {
-  facebook::velox::registerFunctionWrapper<
+  facebook::velox::common::registerFunctionWrapper<
       facebook::velox::common::dynamicRegistry::Dynamic123Function,
       facebook::velox::Varchar>({"dynamic_3"});
 }

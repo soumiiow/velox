@@ -159,10 +159,10 @@ TEST_F(DynamicLinkTest, dynamicLoadErrFunc) {
 TEST_F(DynamicLinkTest, dynamicLoadTwoOfDiffNames) {
 
   const auto dynamicFunctionInt = [&](const std::optional<int64_t> a) {
-    return evaluateOnce<int64_t>("dynamic_5()", a);
+    return evaluateOnce<int64_t>("dynamic_5(c0)", a);
   };
   const auto dynamicFunctionStr = [&](const std::optional<std::string> a) {
-    return evaluateOnce<std::string>("dynamic_5()", a);
+    return evaluateOnce<std::string>("dynamic_5(c0)", a);
   };
 
   auto& registry = exec::simpleFunctions();
